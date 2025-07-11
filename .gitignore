@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Environnement virtuel
+venv/
+.env/
+
+# Environnement de variables
+.env
+
+# Fichiers de log
+*.log
+
+# Cloud Cadence
+.cadence
