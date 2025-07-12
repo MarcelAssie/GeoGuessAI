@@ -13,7 +13,9 @@ from setting import _apply_theme_css
 from setting import display_settings
 load_dotenv()
 import streamlit as st
-
+import folium
+from streamlit_folium import st_folium
+from utils import display_address_to_coords, display_coords_to_address
 
 class GeospatialGame:
     def __init__(self):
@@ -32,11 +34,11 @@ class GeospatialGame:
         self.game_mode = None
         self.current_data = None
         self.game_history = []
-        self.current_page = "Settings"
+        self.current_page = "Home"
 
         # Pour les paramètres
         self.ai_delay = 1.0
-        self.theme = "Sombre"
+        self.theme = "Auto"
         self.accent_color = "#00C0F2"
         self.animation_speed = 1.0
         self.enable_sound = True
@@ -62,27 +64,54 @@ class GeospatialGame:
             self.display_final_results()
 
     def display_sidebar(self):
-        """Affiche la barre latérale de navigation"""
+        """Affiche une barre latérale stylisée avec navigation et informations"""
         with st.sidebar:
-            st.image("../Images/logo.png", width=150)
+            # Style CSS personnalisé
+            st.markdown("""
+            <style>
+                .sidebar .sidebar-content {
+                    background: linear-gradient(180deg, #2c3e50 0%, #1a1a2e 100%);
+                    color: white;
+                    padding: 2rem 1rem;
+                }
+                .sidebar-logo {
+                    text-align: center;
+                    margin-bottom: 2rem;
+                    margin-top:0;
+                    animation: fadeIn 1s ease-in-out;
+                }
+            </style>
+            """, unsafe_allow_html=True)
 
-            # Boutons de navigation
-            if st.button("🏠 Accueil"):
+            # Logo centré avec animation
+            st.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
+            st.image("../Images/logo.png", width=150)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            # Boutons de navigation stylisés
+            if st.button("Accueil", key="home_btn"):
                 self.current_page = "Home"
                 st.rerun()
 
-            if st.button("🏆 Hall of Fame"):
+            if st.button("Hall of Fame", key="hof_btn"):
                 self.current_page = "Hall of Fame"
                 st.rerun()
 
-            if st.button("ℹ️ À propos"):
+            if st.button("À propos", key="about_btn"):
                 self.current_page = "About"
                 st.rerun()
 
-            if st.button("⚙️ Paramètres"):
+            if st.button("Paramètres", key="settings_btn"):
                 self.current_page = "Settings"
                 st.rerun()
 
+
+            # Pied de page minimaliste
+            st.markdown("""
+            <div style="margin-top: 5rem; text-align: center; font-size: 0.8rem; color: #888;">
+                GeoGuessAI v1.0.0<br>© Copyright <br>2025 Marcel Assie - GeoAI Engineer
+            </div>
+            """, unsafe_allow_html=True)
 
     @staticmethod
     def load_data():
@@ -141,96 +170,39 @@ class GeospatialGame:
 
         st.header(f"Manche {self.current_round} sur {self.max_rounds}")
 
-        if self.game_mode == "Adresse → Coordonnées":
-            self.display_address_to_coords()
-        else:
-            self.display_coords_to_address()
-
-        st.markdown("---")
+        # Afficher le scoreboard en premier (sera positionné en haut à droite par le CSS)
         self.display_scoreboard()
 
-    def display_address_to_coords(self):
-        """Affiche l'interface pour le mode Adresse → Coordonnées"""
-        st.subheader("📍 Adresse à localiser:")
+        if self.game_mode == "Adresse → Coordonnées":
+            display_address_to_coords(self)
+        else:
+            display_coords_to_address(self)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f"**Commune:** {self.current_data['communes']}")
-            st.markdown(f"**Voie:** {self.current_data['voies']}")
-        with col2:
-            st.markdown(f"**Numéro:** {self.current_data['numeros']}")
-
-        st.markdown("### Votre réponse")
-
-        with st.form(key="coords_form"):
-            # Ajout de on_change=None pour empêcher la soumission automatique
-            lat = st.number_input("Latitude:",min_value=-90.0,max_value=90.0,value=0.0,step=0.000001,format="%.6f",key="lat_input",on_change=None)
-            lon = st.number_input("Longitude:",min_value=-180.0,max_value=180.0,value=0.0,step=0.000001,format="%.6f",key="lon_input",on_change=None)
-
-            st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-            submitted = st.form_submit_button("Valider ma réponse",
-                                              use_container_width=True,
-                                              type="primary")
-
-        if submitted:
-            self.check_coords_response({"latitude": lat, "longitude": lon}, is_player=True)
-            self.play_machine_turn()
-            st.rerun()
-
-    def display_coords_to_address(self):
-        """Affiche l'interface pour le mode Coordonnées → Adresse"""
-        st.subheader("🌐 Coordonnées à identifier:")
-
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f"**Latitude:** {self.current_data['latitude']}")
-            st.markdown(f"**Longitude:** {self.current_data['longitude']}")
-            st.markdown("### Votre réponse")
-            with st.form(key="address_form"):
-                commune = st.text_input("Commune:",key="commune_input",on_change=None)
-                voie = st.text_input("Nom de la voie:",key="voie_input",on_change=None)
-                numero = st.number_input("Numéro:",min_value=1,value=1,key="numero_input",on_change=None)
-
-                # Bouton de soumission avec espacement
-                st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-                submitted = st.form_submit_button("Valider ma réponse",use_container_width=True,type="primary")
-        with col2:
-            st.map(pd.DataFrame({
-                'lat': [self.current_data['latitude']],
-                'lon': [self.current_data['longitude']]
-            }), zoom=14)
-        if submitted:
-            self.check_address_response({
-                "commune": commune,
-                "nom_voie": voie,
-                "numero_voie": numero
-            }, is_player=True)
-            self.play_machine_turn()
-            st.rerun()
+        st.markdown("---")
 
     def play_machine_turn(self):
         """Fait jouer l'IA et vérifie sa réponse"""
         with st.spinner("L'IA réfléchit..."):
             if self.game_mode == "Adresse → Coordonnées":
-                # machine_response = self.get_model_coordinates({
-                #     "pays": "France",
-                #     "commune": self.current_data["communes"],
-                #     "nom_voie": self.current_data["voies"],
-                #     "numero_voie": self.current_data["numeros"]
-                # })
-                machine_response = {
-                    "latitude": 45.12454,
-                    "longitude": 1.54887
-                }
+                machine_response = self.get_model_coordinates({
+                    "pays": "France",
+                    "commune": self.current_data["communes"],
+                    "nom_voie": self.current_data["voies"],
+                    "numero_voie": self.current_data["numeros"]
+                })
+                # machine_response = {
+                #     "latitude": 45.12454,
+                #     "longitude": 1.54887
+                # }
                 if machine_response:
                     self.check_coords_response(machine_response, is_player=False)
             else:
-                # machine_response = self.get_model_adress({
-                #     "latitude": self.current_data["latitude"],
-                #     "longitude": self.current_data["longitude"]
-                # })
+                machine_response = self.get_model_adress({
+                    "latitude": self.current_data["latitude"],
+                    "longitude": self.current_data["longitude"]
+                })
 
-                machine_response = {"commune": "Alexandre", "nom_voie": "30", "numero_voie": "Data scientist"}
+                # machine_response = {"commune": "Alexandre", "nom_voie": "30", "numero_voie": "Data scientist"}
                 if machine_response:
                     self.check_address_response(machine_response, is_player=False)
 
@@ -263,7 +235,8 @@ class GeospatialGame:
         except Exception as e:
             st.error(f"Erreur lors de la vérification: {e}")
 
-    def calculate_points_from_distance(self, distance):
+    @staticmethod
+    def calculate_points_from_distance(distance):
         """Calcule les points en fonction de la distance (en mètres)"""
         if distance < 5:
             return 1500  # Cas exceptionnel ultra-précis
@@ -393,20 +366,81 @@ class GeospatialGame:
             return None
 
     def display_scoreboard(self):
-        """Affiche le tableau des scores"""
-        st.subheader("📊 Scores")
+        """Affiche le tableau des scores sous forme de popup stylé en haut à droite"""
+        # Style CSS personnalisé
+        st.markdown("""
+        <style>
+            .score-popup {
+                position: fixed;
+                top: 42px;
+                right: 10px;
+                background-color: white;
+                border-radius: 10px;
+                padding: 15px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                z-index: 1000;
+                border-left: 5px solid #4CAF50;
+                animation: slideIn 0.5s ease-in-out;
+                max-width: 300px;
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            .score-title {
+                font-size: 1.2em;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+            }
+            .score-item {
+                display: flex;
+                justify-content: space-between;
+                margin: 8px 0;
+            }
+            .player-name {
+                font-weight: bold;
+            }
+            .player-score {
+                background-color: #f0f2f6;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: bold;
+                color: #4CAF50;
+            }
+            .last-round {
+                margin-top: 10px;
+                font-size: 0.9em;
+                color: #666;
+                border-top: 1px dashed #eee;
+                padding-top: 8px;
+            }
+        </style>
+        """, unsafe_allow_html=True)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric(f"👤 {self.player_name}", self.player_score)
-        with col2:
-            st.metric("👾 Machine", self.machine_score)
+        # Construction du HTML de manière plus propre
+        score_html = [
+            '<div class="score-popup">',
+            '<div class="score-title">📊 Scores</div>',
+            f'<div class="score-item"><span class="player-name">👤 {self.player_name}</span><span class="player-score">{self.player_score} pts</span></div>',
+            f'<div class="score-item"><span class="player-name">👾 Machine</span><span class="player-score">{self.machine_score} pts</span></div>'
+        ]
 
-        # Afficher les résultats du dernier tour si disponibles
-        if 'last_player_score' in st.session_state:
-            st.info(f"Dernier tour: Vous avez marqué {st.session_state.last_player_score} points")
-        if 'last_machine_score' in st.session_state:
-            st.info(f"Dernier tour: La machine a marqué {st.session_state.last_machine_score} points")
+        # Ajouter les résultats du dernier tour si disponibles
+        if 'last_player_score' in st.session_state or 'last_machine_score' in st.session_state:
+            score_html.append('<div class="last-round">')
+            if 'last_player_score' in st.session_state:
+                score_html.append(f'<div>Vous: +{st.session_state.last_player_score} pts</div>')
+            if 'last_machine_score' in st.session_state:
+                score_html.append(f'<div>Machine: +{st.session_state.last_machine_score} pts</div>')
+            score_html.append('</div>')
+
+        score_html.append('</div>')
+
+        # Affichage final
+        st.markdown(''.join(score_html), unsafe_allow_html=True)
 
     def display_final_results(self):
         """Affiche les résultats finaux du jeu"""
@@ -438,12 +472,12 @@ class GeospatialGame:
 
     def run(self):
         """Lance l'application Streamlit avec la navigation"""
-        if "theme" in st.query_params:
-            theme_param = st.query_params.theme
-            if theme_param in ["light", "dark"]:
-                self.theme = "Clair" if theme_param == "light" else "Sombre"
-
-        _apply_theme_css(self)
+        # if "theme" in st.query_params:
+        #     theme_param = st.query_params.theme
+        #     if theme_param in ["light", "dark"]:
+        #         self.theme = "Clair" if theme_param == "light" else "Sombre"
+        #
+        # _apply_theme_css(self)
             # 2. Appliquer le CSS personnalisé si nécessaire
         self.display_sidebar()
 

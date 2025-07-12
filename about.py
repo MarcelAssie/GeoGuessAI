@@ -18,10 +18,10 @@ def display_about():
     ## Auteur
 
     **Marcel Assie**  
-    Étudiant-ingénieur en Geo Data Sceince à l’ENSG, passionné de géodata, IA, et innovation pédagogique.  
+    Étudiant-ingénieur en Geo Data Sceince à l’ENSG, passionné de géodata, IA, et innovation.  
     GeoGuessAI est né de sa volonté de créer un outil à la fois **fun**, **technique** et **inspirant**, où l’on peut apprendre en jouant avec les données.
 
-    Son objectif : promouvoir l’usage des technologies spatiales de façon accessible, interactive et intelligente 🚀
+    Son objectif : promouvoir l’usage des technologies spatiales de façon accessible, interactive et intelligente.
 
     ---
 
@@ -31,9 +31,10 @@ def display_about():
 
     - **Streamlit** pour l’interface web
     - **Geopy** pour le calcul des distances géographiques
-    - **OpenAI / Gemini API** pour les réponses IA contextuelles
+    - **Gemini API** pour les réponses IA 
     - **Pandas** pour la gestion des données
-    - **Folium** (en cours d’intégration) pour les cartes interactives
+    - **Folium et streamlit_folium**  pour les cartes interactives
+    - **Matplolib/datetime/Numpy pour le hall of fame**  pour les cartes interactives
 
     Données issues de sources ouvertes comme **OpenStreetMap**, **BAN**, ou des fichiers CSV locaux.
 
@@ -58,10 +59,12 @@ def display_about():
     Plusieurs améliorations sont prévues pour les versions futures :
 
     - Connexion à des **APIs d’adresses en temps réel** (ex. BAN, OSM Nominatim)
+    - Rajouter d'autres modes de jeux
     - Intégration de **cartes interactives** pour visualiser les réponses 
     - Tableau de scores dynamique et multi-joueurs
-    - Enrichissement des **réponses IA** avec raisonnement contextuel (__on verra bien haha__)
+    - Enrichissement des **réponses IA** avec raisonnement contextuel (_on verra bien haha_)
     - Mode **arcade** : manches chronométrées et niveaux de difficulté
+    - Finalisation de l'onget **Paramètres** pour permettre une meilleure personnalisation de l'interface
     - Déploiement en ligne ou en application mobile
 
     L’ambition est claire : faire de GeoGuessAI une **plateforme ludique de référence** pour découvrir, apprendre et s’amuser avec la géodata.

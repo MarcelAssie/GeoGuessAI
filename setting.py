@@ -1,6 +1,7 @@
 import streamlit as st
 
 
+
 def display_settings(game):
     """Affiche les paramètres de jeu avec une interface utilisateur complète"""
     st.title("⚙️ Paramètres du jeu")
@@ -125,72 +126,78 @@ def display_settings(game):
 
 
 def _apply_theme_css(game):
-    pass
-    # """Applique un thème clair ou sombre agréable à l'œil avec couleurs harmonieuses"""
-    # css = """
-    # <style>
-    #     :root {{
-    #         --primary-color: {accent_color};
-    #         --background-color: {bg_color};
-    #         --secondary-background-color: {secondary_bg};
-    #         --text-color: {text_color};
-    #         --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    #     }}
-    #
-    #     body, .stApp {{
-    #         background-color: var(--background-color) !important;
-    #         color: var(--text-color) !important;
-    #         font-family: var(--font-family) !important;
-    #     }}
-    #
-    #     h1, h2, h3, h4, h5, h6 {{
-    #         color: var(--primary-color) !important;
-    #     }}
-    #
-    #     .stMarkdown, .stText, .stAlert, .stButton>button, .stSelectbox,
-    #     .stTextInput, .stNumberInput, .stTextArea, .stSlider {{
-    #         color: var(--text-color) !important;
-    #         font-family: var(--font-family) !important;
-    #     }}
-    #
-    #     /* Sidebar */
-    #     .css-1d391kg, .st-emotion-cache-1cypcdb {{
-    #         background-color: var(--secondary-background-color) !important;
-    #     }}
-    #
-    #     /* Widgets champs de texte */
-    #     .stTextInput>div>div>input, .stNumberInput>div>div>input,
-    #     .stSelectbox>div>select, .stTextArea>div>textarea {{
-    #         background-color: var(--secondary-background-color) !important;
-    #         color: var(--text-color) !important;
-    #         border: 1px solid #666 !important;
-    #     }}
-    #
-    #     /* Boutons */
-    #     .stButton>button {{
-    #         background-color: var(--primary-color) !important;
-    #         color: #fff !important;
-    #         border-radius: 8px !important;
-    #         padding: 0.5em 1em !important;
-    #         font-weight: bold !important;
-    #         transition: background-color 0.3s ease;
-    #     }}
-    #
-    #     .stButton>button:hover {{
-    #         background-color: #444 !important;
-    #         color: #fff !important;
-    #     }}
-    #
-    #     /* Amélioration pour sliders et inputs */
-    #     .stSlider>div {{
-    #         color: var(--text-color) !important;
-    #     }}
-    # </style>
-    # """.format(
-    #     accent_color=game.accent_color or ("#4CAF50" if game.theme == "Clair" else "#00E0A8"),  # Vert ou turquoise
-    #     bg_color="#F7F9FC" if game.theme == "Clair" else "#12151C",  # Doux gris bleuté ou gris charbon
-    #     secondary_bg="#E3E7EF" if game.theme == "Clair" else "#1E2129",  # Zones secondaires apaisantes
-    #     text_color="#1A1A1A" if game.theme == "Clair" else "#EDEDED"
-    # )
-    #
-    # st.markdown(css, unsafe_allow_html=True)
+    """Applique un thème clair ou sombre agréable à l'œil avec couleurs harmonieuses"""
+    css = """
+    <style>
+        :root {{
+            --primary-color: {accent_color};
+            --background-color: {bg_color};
+            --secondary-background-color: {secondary_bg};
+            --text-color: {text_color};
+            --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }}
+
+        body, .stApp {{
+            background-color: var(--background-color) !important;
+            color: var(--text-color) !important;
+            font-family: var(--font-family) !important;
+        }}
+
+        h1, h2, h3, h4, h5, h6 {{
+            color: var(--primary-color) !important;
+        }}
+
+        .stMarkdown, .stText, .stAlert, .stButton>button, .stSelectbox, 
+        .stTextInput, .stNumberInput, .stTextArea, .stSlider {{
+            color: var(--text-color) !important;
+            font-family: var(--font-family) !important;
+        }}
+
+        /* Labels des champs (correctif) */
+        label, .stSlider label, .stSelectbox label, .stTextInput label,
+        .stNumberInput label, .stRadio label, .stCheckbox label {{
+            color: var(--text-color) !important;
+            font-weight: 500;
+        }}
+
+        /* Sidebar */
+        .css-1d391kg, .st-emotion-cache-1cypcdb {{
+            background-color: var(--secondary-background-color) !important;
+        }}
+
+        /* Widgets champs de texte */
+        .stTextInput>div>div>input, .stNumberInput>div>div>input,
+        .stSelectbox>div>select, .stTextArea>div>textarea {{
+            background-color: var(--secondary-background-color) !important;
+            color: var(--text-color) !important;
+            border: 1px solid #666 !important;
+        }}
+
+        /* Boutons */
+        .stButton>button {{
+            background-color: var(--primary-color) !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            padding: 0.5em 1em !important;
+            font-weight: bold !important;
+            transition: background-color 0.3s ease;
+        }}
+
+        .stButton>button:hover {{
+            background-color: #444 !important;
+            color: #fff !important;
+        }}
+
+        /* Sliders et autres composants */
+        .stSlider>div {{
+            color: var(--text-color) !important;
+        }}
+    </style>
+    """.format(
+        accent_color=game.accent_color or ("#4CAF50" if game.theme == "Clair" else "#00E0A8"),
+        bg_color="#F7F9FC" if game.theme == "Clair" else "#12151C",
+        secondary_bg="#E3E7EF" if game.theme == "Clair" else "#1E2129",
+        text_color="#1A1A1A" if game.theme == "Clair" else "#EDEDED"
+    )
+
+    st.markdown(css, unsafe_allow_html=True)
