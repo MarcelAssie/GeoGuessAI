@@ -18,7 +18,7 @@ def display_about():
     ## Auteur
 
     **Marcel Assie**  
-    Étudiant-ingénieur en Geo Data Sceince à l’ENSG, passionné de géodata, IA, et innovation.  
+    Étudiant-ingénieur en Geo Data Science à l’ENSG, passionné de géodata, IA, et innovation.  
     GeoGuessAI est né de sa volonté de créer un outil à la fois **fun**, **technique** et **inspirant**, où l’on peut apprendre en jouant avec les données.
 
     Son objectif : promouvoir l’usage des technologies spatiales de façon accessible, interactive et intelligente.
@@ -27,14 +27,14 @@ def display_about():
 
     ## Technologies utilisées
 
-    Ce projet repose principalement sur **Python** et les bibliothèques suivantes :
+    Ce projet repose principalement sur **Python** (streamlit) et les bibliothèques suivantes :
 
     - **Streamlit** pour l’interface web
     - **Geopy** pour le calcul des distances géographiques
     - **Gemini API** pour les réponses IA 
-    - **Pandas** pour la gestion des données
-    - **Folium et streamlit_folium**  pour les cartes interactives
-    - **Matplolib/datetime/Numpy pour le hall of fame**  pour les cartes interactives
+    - **Pandas** pour la manipulation des données
+    - **Folium et streamlit_folium** pour les cartes interactives
+    - **Matplolib/Datetime/Numpy* pour le hall of fame*
 
     Données issues de sources ouvertes comme **OpenStreetMap**, **BAN**, ou des fichiers CSV locaux.
 
