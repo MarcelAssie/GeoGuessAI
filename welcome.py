@@ -11,16 +11,16 @@ def get_image_as_base64(file):
 def stream_text():
     """Générateur pour l'effet de texte animé avec conservation du markdown"""
     sections = [
-        "**🧠 Concept:**",
+        "**Concept:**",
         "Affrontez une IA sur son terrain : la connaissance de l'espace !",
         "Deux modes au choix :",
         "- **Mode 1: Adresse → Coordonnées**",
         "- **Mode 2: Coordonnées → Adresse**",
         "",
-        "**🎯 Objectif:**",
+        "**Objectif:**",
         "Soyez plus précis que l'IA pour gagner des points !",
         "",
-        "**🏆 Scoring:**",
+        "**Scoring:**",
         "- Mode 1: Points selon la distance (plus c'est précis, plus c'est payant)",
         "- Mode 2: Points selon la précision de l'adresse (communes, nom de la voie, numéro de la voie)"
     ]
@@ -38,7 +38,7 @@ def stream_text():
 @st.dialog("Configuration")
 def show_game_config_modal(game_instance):
     """Fenêtre modale pour la configuration du jeu"""
-    st.subheader("👤 Informations joueur")
+    st.subheader("Informations joueur")
 
     # Formulaire joueur
     col1, col2 = st.columns(2)
@@ -52,7 +52,7 @@ def show_game_config_modal(game_instance):
         )
 
     st.markdown("---")
-    st.subheader("🎮 Mode de jeu et manches")
+    st.subheader("Mode de jeu et manches")
 
     # Sélection mode de jeu
     game_mode = st.radio(
@@ -150,7 +150,7 @@ def display_welcome(game_instance):
 
     with col1:
         # Section Comment jouer
-        with st.expander("📌 Comment jouer ?", expanded=True):
+        with st.expander("Comment jouer ?", expanded=True):
             placeholder = st.empty()
             full_text = ""
             for chunk in stream_text():

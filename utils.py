@@ -26,7 +26,7 @@ def calculate_distance(coord1, coord2):
 
 def display_address_to_coords(game):
     """Affiche l'interface pour le mode Adresse → Coordonnées"""
-    st.subheader("📍 Adresse à localiser:")
+    st.subheader("Adresse à localiser:")
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -75,7 +75,7 @@ def display_address_to_coords(game):
 
 def display_coords_to_address(game):
     """Affiche l'interface pour le mode Coordonnées → Adresse"""
-    st.subheader("🌐 Coordonnées à identifier:")
+    st.subheader("Coordonnées à identifier:")
 
     col1, col2 = st.columns(2)
     with col1:
