@@ -6,9 +6,11 @@ from datetime import datetime
 import pandas as pd
 from geopy.distance import geodesic
 from dotenv import load_dotenv
-from streamlit import columns
-import time
-
+from welcome import display_welcome
+from about import display_about
+from hall_of_fame import display_hall_of_fame
+from setting import _apply_theme_css
+from setting import display_settings
 load_dotenv()
 import streamlit as st
 
@@ -30,7 +32,17 @@ class GeospatialGame:
         self.game_mode = None
         self.current_data = None
         self.game_history = []
-        self.current_page = "Home"  # Ajout pour gérer la navigation
+        self.current_page = "Settings"
+
+        # Pour les paramètres
+        self.ai_delay = 1.0
+        self.theme = "Sombre"
+        self.accent_color = "#00C0F2"
+        self.animation_speed = 1.0
+        self.enable_sound = True
+        self.enable_bonus = True
+        self.enable_debug = False
+        self.allow_retry = True
 
         # Configuration de la page Streamlit
         st.set_page_config(
@@ -43,104 +55,11 @@ class GeospatialGame:
     def display_home(self):
         """Affiche la page d'accueil principale"""
         if self.current_round == 0:
-            self.display_welcome()
+            display_welcome(self)
         elif self.current_round <= self.max_rounds:
             self.display_round()
         else:
             self.display_final_results()
-
-    def display_welcome(self):
-        """Affiche l'interface de bienvenue et récupère les infos du joueur"""
-        st.title("🌍 GeoGuessAI - Duel Géospatial")
-
-        with st.expander("📌 Comment jouer ?", expanded=True):
-            st.markdown("""
-            **🧠 Concept:**  
-            Affrontez une IA sur son terrain : la connaissance de l'espace !  
-            Deux modes au choix :  
-            - **Mode 1: Adresse → Coordonnées**  
-            - **Mode 2: Coordonnées → Adresse**  
-
-            **🎯 Objectif:**  
-            Soyez plus précis que l'IA pour gagner des points !  
-
-            **🏆 Scoring:**  
-            - Mode 1: Points selon la distance (plus c'est précis, plus c'est payant)  
-            - Mode 2: Points pour la commune (+1), voie (+2), numéro exact (+3)  
-            """)
-
-        col1, col2 = st.columns(2)
-        with col1:
-            self.player_name = st.text_input("Votre prénom/pseudo:", "Joueur")
-        with col2:
-            self.player_gender = st.selectbox("Genre:", ["Non renseigné", "Masculin", "Féminin"])
-
-        st.markdown("---")
-        st.subheader("Choisissez votre mode de jeu:")
-        self.game_mode = st.radio(
-            "Mode de jeu:",
-            options=("Adresse → Coordonnées", "Coordonnées → Adresse"),
-            horizontal=True
-        )
-
-        if st.button("Commencer le jeu 🚀", type="primary"):
-            self.current_round = 1
-            self.start_round()
-            st.rerun()
-
-    @staticmethod
-    def display_about():
-        """Affiche la page À propos"""
-        st.title("À propos de GeoGuessAI")
-
-        st.markdown("""
-        ### 🌍 GeoGuessAI - Duel Géospatial
-
-        **Version:** 1.0  
-        **Auteur:** Marcel Assie 
-        **Date:** 2025  
-
-        ### 📚 Description
-        GeoGuessAI est un jeu qui vous met au défi de rivaliser avec une intelligence artificielle 
-        dans des épreuves de géolocalisation. Testez vos connaissances géographiques et voyez 
-        si vous pouvez battre l'IA !
-
-        ### 🛠 Technologies utilisées
-        - Python
-        - Streamlit
-        - Google Gemini API
-        - Pandas
-        - Geopy
-
-        ### 📝 Licence
-        Ce projet est sous licence MIT.
-        """)
-
-    @staticmethod
-    def display_hall_of_fame():
-        """Affiche le Hall of Fame"""
-        st.title("🏆 Hall of Fame")
-
-        st.markdown("""
-        ### Les meilleurs joueurs
-
-        Voici les scores les plus impressionnants enregistrés dans notre jeu :
-        """)
-
-        # Exemple de données - vous pourriez charger cela depuis un fichier
-        hall_of_fame_data = [
-            {"name": "Marie", "score": 2450, "date": "2025-06-15"},
-            {"name": "Pierre", "score": 1980, "date": "2025-06-14"},
-            {"name": "Sophie", "score": 1850, "date": "2025-06-12"},
-            {"name": "Jean", "score": 1720, "date": "2025-06-10"},
-            {"name": "Lucie", "score": 1650, "date": "2025-06-08"},
-        ]
-
-        st.table(pd.DataFrame(hall_of_fame_data))
-
-    def display_settings(self):
-        st.title("⚙️ Paramètres de l'interface")
-        self.max_rounds = st.slider("Nombre de manches", 1, 10, self.max_rounds)
 
     def display_sidebar(self):
         """Affiche la barre latérale de navigation"""
@@ -164,10 +83,6 @@ class GeospatialGame:
                 self.current_page = "Settings"
                 st.rerun()
 
-
-            st.markdown("---")
-            st.markdown("**Crédits**")
-            st.markdown("Marcel Assie")
 
     @staticmethod
     def load_data():
@@ -512,7 +427,7 @@ class GeospatialGame:
         with col1:
             st.metric(f"👤 {self.player_name}", self.player_score)
         with col2:
-            st.metric("🤖 Machine", self.machine_score)
+            st.metric("👾 Machine", self.machine_score)
 
         # Bouton pour rejouer - Version corrigée
         if st.button("Rejouer 🔄", type="primary"):
@@ -523,14 +438,22 @@ class GeospatialGame:
 
     def run(self):
         """Lance l'application Streamlit avec la navigation"""
+        if "theme" in st.query_params:
+            theme_param = st.query_params.theme
+            if theme_param in ["light", "dark"]:
+                self.theme = "Clair" if theme_param == "light" else "Sombre"
+
+        _apply_theme_css(self)
+            # 2. Appliquer le CSS personnalisé si nécessaire
         self.display_sidebar()
 
         # Gestion de l'affichage en fonction de la page courante
         if self.current_page == "Home":
             self.display_home()
         elif self.current_page == "Hall of Fame":
-            self.display_hall_of_fame()
+            display_hall_of_fame()
         elif self.current_page == "About":
-            self.display_about()
+            display_about()
         elif self.current_page == "Settings":
-            self.display_settings()
+            display_settings(self)
+

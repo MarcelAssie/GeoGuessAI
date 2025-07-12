@@ -1,0 +1,6 @@
+[theme]
+base = "light"  # Thème par défaut
+primaryColor = "#00C0F2"  # Couleur d'accent
+backgroundColor = "#000000"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "white"
