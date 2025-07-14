@@ -1,6 +1,6 @@
 import os
 import ast
-from google import genai
+import google.genai as genai
 from google.genai import types
 from datetime import datetime
 import pandas as pd
@@ -176,7 +176,7 @@ class GeospatialGame:
 
     def play_machine_turn(self):
         """Fait jouer l'IA et vérifie sa réponse"""
-        with st.spinner("L'IA réfléchit..."):
+        with st.spinner("Patientez... La machine réfléchit..."):
             if self.game_mode == "Adresse → Coordonnées":
                 machine_response = self.get_model_coordinates({
                     "pays": "France",
