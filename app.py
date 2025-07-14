@@ -1,7 +1,8 @@
-import os
 import ast
-from google import genai
-from google.genai import types
+import os
+# from google import genai
+# from google.genai import types
+import google.generativeai as genai
 from datetime import datetime
 import pandas as pd
 from geopy.distance import geodesic
@@ -118,11 +119,12 @@ class GeospatialGame:
             st.error(f"Erreur de chargement des données: {e}")
             return pd.DataFrame()
 
-    @staticmethod
-    def get_gemini_connection():
+    def get_gemini_connection(self):
         """Établit la connexion à l'API Gemini"""
         try:
-            return genai.Client(api_key=os.getenv("API_KEY"))
+            # return genai.configure(api_key=os.getenv("API_KEY"))
+            genai.configure(api_key=os.getenv("API_KEY"))
+            return genai.GenerativeModel(model_name=self.model)
         except Exception as e:
             st.error(f"Erreur de connexion à Gemini: {e}")
             return None
@@ -302,13 +304,26 @@ class GeospatialGame:
         """
 
         try:
-            response = self.client.models.generate_content(
-                model=self.model,
+            # model = genai.GenerativeModel(model_name="gemini-pro")
+            #
+            # # 3. Génération de contenu
+            # response = model = self.client.models.generate_content(
+            #     model=self.model,
+            #     contents=[prompt],
+            #     config=types.GenerateContentConfig(
+            #         temperature=0.1
+            #     )
+            # )
+
+
+            # 3. Génération de contenu
+            response = self.client.generate_content(
                 contents=[prompt],
-                config=types.GenerateContentConfig(
+                generation_config=genai.types.GenerationConfig(
                     temperature=0.1
                 )
             )
+
             cleaned = response.text.replace("```", "").replace("python", "").strip()
             result = ast.literal_eval(cleaned)
 
@@ -341,10 +356,16 @@ class GeospatialGame:
         """
 
         try:
-            response = self.client.models.generate_content(
-                model=self.model,
+            # response = self.client.models.generate_content(
+            #     model=self.model,
+            #     contents=[prompt],
+            #     config=types.GenerateContentConfig(
+            #         temperature=0.1
+            #     )
+            # )
+            response = self.client.generate_content(
                 contents=[prompt],
-                config=types.GenerateContentConfig(
+                generation_config=genai.types.GenerationConfig(
                     temperature=0.1
                 )
             )
