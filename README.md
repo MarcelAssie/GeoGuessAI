@@ -1,85 +1,102 @@
-# 🌍 GeoGuessAI – The Human vs AI Geospatial Challenge 🤖🧠
+# 🌍 GeoGuessAI – The Human vs AI Geospatial Challenge 
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://www.python.org/)
 [![AI-Powered](https://img.shields.io/badge/AI-Gemini%202.5%20Pro-ff9800?logo=google)](https://deepmind.google/technologies/gemini/)
 [![GeoData](https://img.shields.io/badge/Data-GeoJSON%2FCSV-lightgrey?logo=openstreetmap)](https://www.openstreetmap.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app/)
 
-> 🕹️ A Python-powered game where a human competes against an AI in geolocation precision. Whether you’re guessing coordinates from addresses or the other way around, **spatial data meets AI** in a fun, intelligent, and educational challenge.
-
----
-
-## 🎯 Concept
-
-**GeoGuessAI** is a geospatial guessing game where the **player** goes head-to-head with a generative **AI (Gemini 2.5 Pro)** to test spatial reasoning and geodata knowledge.
-
-### 🧭 Game Modes
-- **Address → Coordinates**: Guess the exact GPS location of a given address.
-- **Coordinates → Address**: Identify the street number, street name, and city from a given pair of coordinates.
-
-Each round alternates between the human and the AI, with scores based on the **accuracy** of the guesses. May the best geographer win!
+> 🕹️ A Python-powered geolocation game where a **human competes with an AI** in guessing locations from either coordinates or addresses.
+> Built to explore the frontier between **human intuition** and **machine intelligence**, while having fun with real geospatial data.
 
 ---
 
-## 🛠️ Features
+## Concept
 
-- 🎮 **Interactive gameplay** directly in the terminal
-- 🧠 **AI-powered responses** via structured prompting to Gemini
-- 📍 **Scoring based on spatial precision** using the Haversine formula
-- 🗺️ **Real-world dataset** (addresses and GPS coordinates)
-- 📊 **Live score tracking** for both human and AI
-- 🔄 **Two gameplay modes** — freely selectable at start
+**GeoGuessAI** is a next-gen geolocation challenge game blending **AI**, **spatial data**, and **interactive gameplay**.
+The goal? Outguess the AI, earn points through precision, and prove that human geographical intuition still matters!
+
+### Game Modes
+
+* **Address → Coordinates**
+  Given an address, try to guess the exact **latitude and longitude**.
+* **Coordinates → Address**
+  From a pair of GPS coordinates, identify the **city**, **street**, and **house number**.
+
+Every round alternates between the **player** and the **AI (Gemini 2.5 Pro)**.
+Points are awarded based on **accuracy**, with partial credit for close guesses.
 
 ---
 
-## 📸 Preview
+## Motivation
 
-> _(Add screenshots or animated GIFs here when you’re ready)_
+> “I built GeoGuessAI to explore the fusion of geodata, machine learning, and user experience — a fun and educational way to experiment with spatial intelligence.”
+> — *Marcel Assie, Creator*
+
+This project is part of an ongoing mission to make **spatial technologies accessible, inspiring, and engaging**, especially for students, data enthusiasts, and AI practitioners.
+
+---
+
+## Features
+
+* Terminal + Web interface (Streamlit)
+* Turn-based play: human vs AI
+* Score calculated by spatial distance (Haversine)
+* Uses real-world data (OpenStreetMap, BAN)
+* Gemini-powered predictions (via Google GenAI)
+* Local CSV input + easy extensibility
+* Score display + optional visual feedback with Folium
+
+---
+
+## Screenshots / Preview
+
+> *(You can add visuals here in your GitHub later)*
+
+```
+Round 2: Human's Turn
+Guess the coordinates of: 25 Rue Victor Hugo, Paris
+
+Latitude: 48.8529
+Longitude: 2.3476
+
+Example : Precision: 87.5 meters → You earned +200 points!
+```
+
+---
+
+## Getting Started
+
+### Requirements
+
+* Python 3.10+
+* Google Gemini API key
+* `game_data.csv` file (see format below)
+
+### ⚙️ Installation
 
 ```bash
-Your turn!
-Guess the coordinates of: 8 Rue des Écoles, Paris
-
-Latitude: 48.8531
-Longitude: 2.3488
-
-✅ Precision: 49.1 meters — You scored +100 points!
-
-Current score:
-👤 Player: 200 pts
-🤖 AI: 150 pts
-````
-
----
-
-## 🚀 Getting Started
-
-### ✅ Prerequisites
-
-* Python 3.10 or higher
-* Required packages: see `requirements.txt`
-
-### 📦 Installation
-
-```bash
-git clone https://github.com/YOUR_USERNAME/geoguessai.git
-cd geoguessai
+git clone https://github.com/MarcelAssie/GeoGuessAI.git
 pip install -r requirements.txt
 ```
 
-> Then, create a `.env` file to store your Gemini API key:
+Create a `.env` file at the root:
 
 ```env
 API_KEY=your_google_gemini_api_key
 ```
 
+To run the **Streamlit interface**:
+
+```bash
+streamlit run main.py
+```
+
 ---
 
-## 🧪 Input Dataset
+## Dataset Format
 
-The game uses a CSV file named `game_data.csv` stored in the `Data/` directory.
-
-Expected format:
+> Stored in `Data/game_data.csv`
 
 ```
 unique_ids;latitude;longitude;communes;voies;numeros
@@ -87,63 +104,79 @@ id_001;48.8566;2.3522;Paris;Rue de Rivoli;25
 ...
 ```
 
-> You can generate this using any open geodata source (e.g. OpenStreetMap, BAN, IGN).
+You can generate this from:
+
+* OpenStreetMap
+* Base Adresse Nationale (BAN)
+* Your own local data
 
 ---
 
-## 🧠 AI Prompts & Behavior
+## AI Prompting
 
-The AI (Gemini 2.5 Pro) is prompted with custom messages to simulate:
+The AI is prompted with **structured instructions** for strict parsing:
 
-* 📌 Address prediction from GPS coordinates
-* 📌 GPS prediction from a given full address
-
-⚙️ It responds in a strict Python list format for easy parsing and validation:
+### Coordinate to Address:
 
 ```python
-["city_name", "street_name", street_number]
-[latitude, longitude]
+["Paris", "Rue de Rivoli", 25]
 ```
 
----
+### Address to Coordinate:
 
-## 🧱 Tech Stack
+```python
+[48.8566, 2.3522]
+```
 
-| Tool            | Purpose                |
-| --------------- | ---------------------- |
-| 🐍 Python       | Game logic and CLI     |
-| 📍 geopy        | Distance calculation   |
-| 📊 pandas       | Data handling          |
-| 🌱 dotenv       | API key management     |
-| 🤖 Google GenAI | AI-powered predictions |
+Strict formats ensure smooth validation and fair comparison with human inputs.
 
 ---
 
-## 💡 Possible Enhancements
+## Tech Stack
 
-* 🖥️ Web interface with **Streamlit** or **Flask**
-* 🗺️ **Folium map rendering** for visual feedback
-* 🌐 Geocoding APIs integration (e.g. Nominatim, Google Maps)
-* 🧑‍🤝‍🧑 Multiplayer or AI vs AI mode
-* 📈 Score persistence & leaderboard
-* 🧩 Progressive difficulty levels
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-Feel free to fork, improve, and use it as you like.
+| Component         | Description                  |
+| ----------------- | ---------------------------- |
+| Python 3.10+      | Core language                |
+| Streamlit         | Web interface (optional)     |
+| Geopy             | Distance calculations        |
+| Pandas            | Data handling                |
+| Folium            | Map visualization (optional) |
+| Google Gemini API | Generative AI responses      |
+| dotenv            | API key management           |
 
 ---
 
-## 👨‍💻 Author
+## What’s Next?
+
+Planned enhancements for future versions:
+
+* Integration with **live geocoding APIs** (Nominatim, Google Maps)
+* Map feedback using **Folium + Leaflet**
+* Multiplayer or **AI vs AI**
+* **Arcade mode** with difficulty scaling and time limits
+* Configurable interface: tolerance, data source, themes
+* Leaderboards and score history
+* Mobile app deployment (React Native or Flutter)
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+Feel free to reuse, modify, and redistribute — just credit the original author.
+
+---
+
+##  Author
 
 **Marcel Assie**
-🎓 GeoAI & Geomatics Engineer in training – ENSG
-💡 Passionate about spatial data, artificial intelligence, and innovation.
+GeoAI & Geomatics Engineer in training @ ENSG
+Passionate about maps, intelligent systems, and building useful & creative tools.
 
-🔗 [LinkedIn](https://www.linkedin.com/in/marcel-assie/)
-🚀 Project built for fun, learning, and pushing the boundaries of geospatial AI! 🌍🤖
+[LinkedIn](https://www.linkedin.com/in/marcel-assie/)
+Suggestions, ideas, or bugs? [Open an issue](https://github.com/MarcelAssie/GeoGuessAI.git/issues)
 
 ---
+
+> “Let’s make spatial intelligence playful, accessible, and powerful.”
+

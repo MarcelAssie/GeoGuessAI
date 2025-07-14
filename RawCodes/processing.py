@@ -148,7 +148,7 @@ class GeospatialGame:
                 return self.get_user_adress() # La saisie du joueur
             return self.get_model_adress(data) # La réponse du modèle
 
-        # Nous nous trouvons dans le cas où le joueur et la mahcine jouent avec les coordonnées en entrée
+        # Nous nous trouvons dans le cas où le joueur et la machine jouent avec les coordonnées en entrée
         if cpt%2:
             return self.get_user_coordinates() # La saisie du joueur
         return self.get_model_coordinates(data) # La réponse du modèle

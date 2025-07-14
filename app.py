@@ -9,12 +9,9 @@ from dotenv import load_dotenv
 from welcome import display_welcome
 from about import display_about
 from hall_of_fame import display_hall_of_fame
-from setting import _apply_theme_css
 from setting import display_settings
 load_dotenv()
 import streamlit as st
-import folium
-from streamlit_folium import st_folium
 from utils import display_address_to_coords, display_coords_to_address
 
 class GeospatialGame:
@@ -66,7 +63,6 @@ class GeospatialGame:
     def display_sidebar(self):
         """Affiche une barre latérale stylisée avec navigation et informations"""
         with st.sidebar:
-            # Style CSS personnalisé
             st.markdown("""
             <style>
                 .sidebar .sidebar-content {
@@ -83,12 +79,10 @@ class GeospatialGame:
             </style>
             """, unsafe_allow_html=True)
 
-            # Logo centré avec animation
             st.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
-            st.image("../Images/logo.png", width=150)
+            st.image("../Images/logo2.png", width=150)
             st.markdown('</div>', unsafe_allow_html=True)
 
-            # Boutons de navigation stylisés
             if st.button("Accueil", key="home_btn"):
                 self.current_page = "Home"
                 st.rerun()
