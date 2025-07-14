@@ -1,6 +1,6 @@
 import os
 import ast
-import google.genai as genai
+from google import genai
 from google.genai import types
 from datetime import datetime
 import pandas as pd
