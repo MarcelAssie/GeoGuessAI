@@ -40,7 +40,7 @@ def display_about():
 
     ---
 
-    ## État actuel du projet – *Version 1.0*
+    ## État actuel du projet – *Version 1.0.0*
 
     - Deux modes de jeu :  
       - **Adresse → Coordonnées**  

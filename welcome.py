@@ -24,14 +24,10 @@ def stream_text():
         "- Mode 2: Points selon la précision de l'adresse (communes, nom de la voie, numéro de la voie)"
     ]
     for section in sections:
-        if section.startswith(("**", "-")):  # Si c'est du markdown important
-            st.markdown(section)
+        for word in section.split():
+            yield word + " "
             time.sleep(0.02)
-        else:
-            for word in section.split():
-                yield word + " "
-                time.sleep(0.02)
-            yield "\n\n"  # Saut de ligne
+        yield "\n\n"  # Saut de ligne
 
 
 @st.dialog("Configuration")
@@ -39,7 +35,6 @@ def show_game_config_modal(game_instance):
     """Fenêtre modale pour la configuration du jeu"""
     st.subheader("Informations joueur")
 
-    # Formulaire joueur
     col1, col2 = st.columns(2)
     with col1:
         player_name = st.text_input("Votre pseudo:", value=game_instance.player_name or "Joueur")
@@ -53,7 +48,6 @@ def show_game_config_modal(game_instance):
     st.markdown("---")
     st.subheader("Mode de jeu et manches")
 
-    # Sélection mode de jeu
     game_mode = st.radio(
         "Choisissez votre mode ",
         options=("Adresse → Coordonnées", "Coordonnées → Adresse"),
@@ -67,7 +61,6 @@ def show_game_config_modal(game_instance):
         help="Détermine le nombre total de tours dans une partie"
     )
 
-    # Boutons d'action
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Annuler", use_container_width=True):
@@ -75,7 +68,6 @@ def show_game_config_modal(game_instance):
 
     with col2:
         if st.button("Commencer le jeu", type="primary", use_container_width=True):
-            # Sauvegarder les paramètres
             game_instance.player_name = player_name
             game_instance.player_gender = player_gender
             game_instance.game_mode = game_mode
@@ -93,10 +85,8 @@ def display_welcome(game_instance):
 
     with col0 :
         img_file = "../Images/welcome_image.png"
-        # Conversion de l'image en Base64
         img_base64 = get_image_as_base64(img_file)
 
-        # Injection de CSS et HTML avec l'image en Base64
         st.markdown(
             f"""
                 <style>
@@ -148,7 +138,6 @@ def display_welcome(game_instance):
 
 
     with col1:
-        # Section Comment jouer
         with st.expander("Comment jouer ?", expanded=True):
             placeholder = st.empty()
             full_text = ""

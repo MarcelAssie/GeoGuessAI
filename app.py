@@ -102,7 +102,7 @@ class GeospatialGame:
             # Pied de page minimaliste
             st.markdown("""
             <div style="margin-top: 5rem; text-align: center; font-size: 0.8rem; color: #888;">
-                GeoGuessAI v1.0.0<br>© Copyright <br>2025 Marcel Assie - GeoAI Engineer
+                GeoGuessAI v1.0.0<br>2025 © Copyright <br>Marcel Assie - GeoAI Engineer
             </div>
             """, unsafe_allow_html=True)
 
