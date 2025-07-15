@@ -162,7 +162,7 @@ Planned enhancements for future versions:
 
 ## License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **[MIT License](LICENSE)**.
 Feel free to reuse, modify, and redistribute — just credit the original author.
 
 ---
