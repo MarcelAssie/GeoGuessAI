@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app/)
 
-> 🕹️ A Python-powered geolocation game where a **human competes with an AI** in guessing locations from either coordinates or addresses.
+> A Python-powered geolocation game where a **human competes with an AI** in guessing locations from either coordinates or addresses.
 > Built to explore the frontier between **human intuition** and **machine intelligence**, while having fun with real geospatial data.
 
 ---
